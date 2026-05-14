@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bazaar Information Gathering</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Bazaar Information Gathering</h1>
+    
+    <h2>Contact Form</h2>
+    <form id="contactForm">
+        <input type="text" name="name" placeholder="Name" required><br>
+        <input type="email" name="email" placeholder="Email" required><br>
+        <input type="tel" name="phone" placeholder="Phone" required><br>
+        <textarea name="message" placeholder="Message"></textarea><br>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="contactResponse"></div>
+    
+    <h2>Crawl Data</h2>
+    <form id="crawlForm">
+        <input type="url" name="url" placeholder="URL to crawl" required><br>
+        <button type="submit">Crawl</button>
+    </form>
+    <div id="crawlResponse"></div>
+    
+    <h2>Social Media Crawl</h2>
+    <form id="socialCrawlForm">
+        <input type="url" name="url" placeholder="Social media URL" required><br>
+        <button type="submit">Crawl Social Media</button>
+    </form>
+    <div id="socialCrawlResponse"></div>
+    
+    <script>
+        $('#contactForm').submit(function(e) {
+            e.preventDefault();
+            $.post('/contact', $(this).serialize(), function(data) {
+                $('#contactResponse').text(data.message || data.error);
+            });
+        });
+        
+        $('#crawlForm').submit(function(e) {
+            e.preventDefault();
+            $.post('/crawl', $(this).serialize(), function(data) {
+                if (data.error) {
+                    $('#crawlResponse').text('Error: ' + data.error);
+                } else {
+                    $('#crawlResponse').html('<h3>' + data.title + '</h3><p>' + data.content + '</p>');
+                }
+            });
+        });
+        
+        $('#socialCrawlForm').submit(function(e) {
+            e.preventDefault();
+            $.post('/social_crawl', $(this).serialize(), function(data) {
+                if (data.error) {
+                    $('#socialCrawlResponse').text('Error: ' + data.error);
+                } else {
+                    $('#socialCrawlResponse').html('<h3>' + data.title + '</h3><p>' + data.content + '</p>');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
